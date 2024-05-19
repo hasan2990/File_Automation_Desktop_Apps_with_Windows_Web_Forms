@@ -32,13 +32,15 @@ namespace WindowsForms
         {
             try
             {
-                int cnt = 0;
                 if (File.Exists(filePath))
                 {
-                    ++cnt;
+                   
                     File.Delete(filePath);
-                    Console.WriteLine($"{cnt} Files '{filePath}' deleted successfully.");
+                    
+                    Console.WriteLine($"File '{filePath}' deleted successfully.");
                 }
+                
+                
             }
             catch (Exception ex)
             {
@@ -60,9 +62,14 @@ namespace WindowsForms
 
             DateTime now = DateTime.Now;
 
+            if (string.IsNullOrEmpty(textBox2.Text))
+            {
+                MessageBox.Show("Please select a day first.");
+                return;
+            }
             int days = Convert.ToInt32(textBox2.Text);
 
-
+            int cnt = 0;
             foreach (string file in Directory.GetFiles(textBox1.Text))
             {
                 Console.WriteLine(file);
@@ -73,12 +80,19 @@ namespace WindowsForms
 
                 if (timeDifference.TotalDays >= days)
                 {
+                    ++cnt;
                     deleteFile(file);
                 }
 
             }
-
-            MessageBox.Show($"Files Are Deleted From Directory Successfully.");
+            if(cnt > 0)
+            {
+                MessageBox.Show($"{cnt} Files Are Deleted From Directory Successfully.");
+            }
+            else
+            {
+                MessageBox.Show("File is already Empty.");
+            }
 
         }
 
@@ -98,7 +112,7 @@ namespace WindowsForms
             DateTime startDate = dateTimePicker1.Value;
             DateTime endDate = dateTimePicker2.Value;
 
-            if (startDate > endDate)
+            if (startDate >= endDate)
             {
                 MessageBox.Show("The start date must be earlier than the end date.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
