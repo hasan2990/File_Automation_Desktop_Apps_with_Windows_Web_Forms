@@ -43,9 +43,10 @@ namespace WindowsForms
             }
             int days = Convert.ToInt32(textBox2.Text);
 
-            int cnt = 0;
+            int cnt = 0, c = 0;
             foreach (string path in checkedListBox1.Items)
             {
+                
                 if (Directory.Exists(path))
                 {
                     string[] files = Directory.GetFiles(path);
@@ -59,11 +60,12 @@ namespace WindowsForms
 
                         if (timeDifference.TotalDays >= days)
                         {
-
                             try
                             {
+                               
                                 if (File.Exists(file))
                                 {
+                                    
                                     ++cnt;
                                     File.Delete(file);
 
@@ -101,9 +103,7 @@ namespace WindowsForms
 
             textBox3.Clear();
             textBox2.Clear();
-            textBox3.Text = string.Empty;
-            textBox2.Text = string.Empty;
-
+            checkedListBox1.Items.Clear();
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
@@ -168,8 +168,7 @@ namespace WindowsForms
 
                 textBox3.Clear();
                 textBox2.Clear();
-                textBox3.Text = string.Empty;
-                textBox2.Text = string.Empty;
+                checkedListBox1.Items.Clear();
 
                 dateTimePicker1.Value = DateTime.Now;
                 dateTimePicker2.Value = DateTime.Now;
@@ -203,8 +202,14 @@ namespace WindowsForms
             {
                 textBox3.Text = folder.SelectedPath;
             }
-
-            checkedListBox1.Items.Add(textBox3.Text);
+            if (!checkedListBox1.Items.Contains(textBox3.Text))
+            {
+                checkedListBox1.Items.Add(textBox3.Text);
+            }
+            else
+            {
+                MessageBox.Show("Path is already added.");
+            }
 
         }
 
@@ -216,6 +221,20 @@ namespace WindowsForms
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void undo_Click(object sender, EventArgs e)
+        {
+            List<object> lstobj = new List<object>(); 
+
+            foreach (object obj in checkedListBox1.CheckedItems) 
+            { 
+                lstobj.Add(obj); 
+            }
+            foreach (object obj in lstobj)
+            {
+                checkedListBox1.Items.Remove(obj);
+            }
         }
     }
 }

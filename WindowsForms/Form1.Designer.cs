@@ -158,6 +158,7 @@
             this.undo.TabIndex = 16;
             this.undo.Text = "Undo";
             this.undo.UseVisualStyleBackColor = true;
+            this.undo.Click += new System.EventHandler(this.undo_Click);
             // 
             // Form1
             // 
