@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -18,7 +19,7 @@ namespace WindowsForms
             InitializeComponent();
         }
 
-        List<DirectoryInfo> lstDicrectory = new List<DirectoryInfo>();
+        //List<DirectoryInfo> lstDicrectory = new List<DirectoryInfo>();
        
         
         private void button2_Click(object sender, EventArgs e)
@@ -43,30 +44,35 @@ namespace WindowsForms
             int days = Convert.ToInt32(textBox2.Text);
 
             int cnt = 0;
-            foreach (DirectoryInfo dir in lstDicrectory)
+            foreach (string path in checkedListBox1.Items)
             {
-                if (dir.Exists)
+                if (Directory.Exists(path))
                 {
-                    foreach(FileInfo file in dir.GetFiles())
+                    string[] files = Directory.GetFiles(path);
+                    foreach (string file in files)
                     {
                         Console.WriteLine(file);
 
-                        DateTime creationTime = file.LastWriteTime;
+                        DateTime creationTime = File.GetLastWriteTime(file);
 
                         TimeSpan timeDifference = now - creationTime;
 
                         if (timeDifference.TotalDays >= days)
                         {
+
                             try
                             {
-                                if (file.Exists)
+                                if (File.Exists(file))
                                 {
                                     ++cnt;
-                                    file.Delete();
+                                    File.Delete(file);
 
                                     Console.WriteLine($"File '{file}' deleted successfully.");
                                 }
-
+                                else
+                                {
+                                    MessageBox.Show("There is no file here.");
+                                }
 
                             }
                             catch (Exception ex)
@@ -75,11 +81,12 @@ namespace WindowsForms
                             }
 
                         }
+
                     }
                 }
                 else
                 {
-                    MessageBox.Show("There is no directory here.");
+                    MessageBox.Show("No path here.");
                 }
             }
             
@@ -91,6 +98,11 @@ namespace WindowsForms
             {
                 MessageBox.Show("File is already Empty.");
             }
+
+            textBox3.Clear();
+            textBox2.Clear();
+            textBox3.Text = string.Empty;
+            textBox2.Text = string.Empty;
 
         }
 
@@ -119,30 +131,46 @@ namespace WindowsForms
             try
             {
                 int cnt = 0;
-                foreach (DirectoryInfo dir in lstDicrectory)
+                
+                foreach(string path in checkedListBox1.Items)
                 {
-                    if (dir.Exists)
+                    if(Directory.Exists(path))
                     {
-                        foreach (FileInfo file in dir.GetFiles())
+                        string[] files = Directory.GetFiles(path);
+                        foreach(string file in files)
                         {
                             Console.WriteLine(file);
 
-                            DateTime fileDate = file.LastWriteTime;
+                            DateTime fileDate = File.GetLastWriteTime(file);
                             if (fileDate.Date >= startDate.Date && fileDate.Date <= endDate.Date)
                             {
                                 cnt++;
-                                file.Delete();
+                                File.Delete(file);
                             }
+
                         }
                     }
+                    else
+                    {
+                        MessageBox.Show("No path here.");
+                    }
                 }
-               
+                if (cnt > 0)
+                {
+                    MessageBox.Show($"{cnt} Files between the specified dates have been deleted.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("File is already Empty.");
+                }
 
-                MessageBox.Show($"{cnt} Files between the specified dates have been deleted.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+               
 
                 textBox3.Clear();
                 textBox2.Clear();
                 textBox3.Text = string.Empty;
+                textBox2.Text = string.Empty;
+
                 dateTimePicker1.Value = DateTime.Now;
                 dateTimePicker2.Value = DateTime.Now;
             }
@@ -175,11 +203,17 @@ namespace WindowsForms
             {
                 textBox3.Text = folder.SelectedPath;
             }
-            DirectoryInfo directoryInfo = new DirectoryInfo(textBox3.Text);
-            lstDicrectory.Add(directoryInfo);
+
+            checkedListBox1.Items.Add(textBox3.Text);
+
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }

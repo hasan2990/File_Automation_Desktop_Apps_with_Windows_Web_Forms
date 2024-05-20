@@ -39,6 +39,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.button4 = new System.Windows.Forms.Button();
+            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            this.undo = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label2
@@ -60,7 +62,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(370, 83);
+            this.button2.Location = new System.Drawing.Point(340, 83);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(103, 23);
             this.button2.TabIndex = 5;
@@ -87,7 +89,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(520, 48);
+            this.label3.Location = new System.Drawing.Point(492, 53);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(29, 13);
             this.label3.TabIndex = 8;
@@ -96,7 +98,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(523, 88);
+            this.label4.Location = new System.Drawing.Point(492, 83);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(26, 13);
             this.label4.TabIndex = 9;
@@ -131,7 +133,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(370, 48);
+            this.button4.Location = new System.Drawing.Point(340, 45);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(103, 23);
             this.button4.TabIndex = 13;
@@ -139,11 +141,31 @@
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
+            // checkedListBox1
+            // 
+            this.checkedListBox1.FormattingEnabled = true;
+            this.checkedListBox1.Location = new System.Drawing.Point(42, 159);
+            this.checkedListBox1.Name = "checkedListBox1";
+            this.checkedListBox1.Size = new System.Drawing.Size(222, 229);
+            this.checkedListBox1.TabIndex = 15;
+            this.checkedListBox1.SelectedIndexChanged += new System.EventHandler(this.checkedListBox1_SelectedIndexChanged);
+            // 
+            // undo
+            // 
+            this.undo.Location = new System.Drawing.Point(340, 222);
+            this.undo.Name = "undo";
+            this.undo.Size = new System.Drawing.Size(75, 23);
+            this.undo.TabIndex = 16;
+            this.undo.Text = "Undo";
+            this.undo.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(905, 642);
+            this.Controls.Add(this.undo);
+            this.Controls.Add(this.checkedListBox1);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.label5);
@@ -174,6 +196,8 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.CheckedListBox checkedListBox1;
+        private System.Windows.Forms.Button undo;
     }
 }
 
