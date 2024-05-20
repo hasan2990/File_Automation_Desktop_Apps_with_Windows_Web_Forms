@@ -18,39 +18,12 @@ namespace WindowsForms
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            FolderBrowserDialog folder = new FolderBrowserDialog();
-            DialogResult result = folder.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                textBox1.Text = folder.SelectedPath;
-            }
-
-        }
-        private void deleteFile(string filePath)
-        {
-            try
-            {
-                if (File.Exists(filePath))
-                {
-                   
-                    File.Delete(filePath);
-                    
-                    Console.WriteLine($"File '{filePath}' deleted successfully.");
-                }
-                
-                
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error deleting file '{filePath}': {ex.Message}");
-            }
-        }
-
+        List<DirectoryInfo> lstDicrectory = new List<DirectoryInfo>();
+       
+        
         private void button2_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(textBox1.Text))
+            if (string.IsNullOrEmpty(textBox3.Text))
             {
                 MessageBox.Show("Please select a directory first.");
                 return;
@@ -70,21 +43,46 @@ namespace WindowsForms
             int days = Convert.ToInt32(textBox2.Text);
 
             int cnt = 0;
-            foreach (string file in Directory.GetFiles(textBox1.Text))
+            foreach (DirectoryInfo dir in lstDicrectory)
             {
-                Console.WriteLine(file);
-
-                DateTime creationTime = File.GetLastWriteTime(file);
-
-                TimeSpan timeDifference = now - creationTime;
-
-                if (timeDifference.TotalDays >= days)
+                if (dir.Exists)
                 {
-                    ++cnt;
-                    deleteFile(file);
-                }
+                    foreach(FileInfo file in dir.GetFiles())
+                    {
+                        Console.WriteLine(file);
 
+                        DateTime creationTime = file.LastWriteTime;
+
+                        TimeSpan timeDifference = now - creationTime;
+
+                        if (timeDifference.TotalDays >= days)
+                        {
+                            try
+                            {
+                                if (file.Exists)
+                                {
+                                    ++cnt;
+                                    file.Delete();
+
+                                    Console.WriteLine($"File '{file}' deleted successfully.");
+                                }
+
+
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Error deleting file '{file}': {ex.Message}");
+                            }
+
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("There is no directory here.");
+                }
             }
+            
             if(cnt > 0)
             {
                 MessageBox.Show($"{cnt} Files Are Deleted From Directory Successfully.");
@@ -103,7 +101,7 @@ namespace WindowsForms
 
         private void button3_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(textBox1.Text))
+            if (string.IsNullOrEmpty(textBox3.Text))
             {
                 MessageBox.Show("Please select a folder first.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -112,7 +110,7 @@ namespace WindowsForms
             DateTime startDate = dateTimePicker1.Value;
             DateTime endDate = dateTimePicker2.Value;
 
-            if (startDate >= endDate)
+            if (startDate.Date > endDate.Date)
             {
                 MessageBox.Show("The start date must be earlier than the end date.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -120,23 +118,31 @@ namespace WindowsForms
 
             try
             {
-                var files = Directory.GetFiles(textBox1.Text);
                 int cnt = 0;
-                foreach (var file in files)
+                foreach (DirectoryInfo dir in lstDicrectory)
                 {
-                    DateTime fileDate = File.GetLastWriteTime(file);
-                    if (fileDate >= startDate && fileDate <= endDate)
+                    if (dir.Exists)
                     {
-                        cnt++;
-                        File.Delete(file);
+                        foreach (FileInfo file in dir.GetFiles())
+                        {
+                            Console.WriteLine(file);
+
+                            DateTime fileDate = file.LastWriteTime;
+                            if (fileDate.Date >= startDate.Date && fileDate.Date <= endDate.Date)
+                            {
+                                cnt++;
+                                file.Delete();
+                            }
+                        }
                     }
                 }
+               
 
                 MessageBox.Show($"{cnt} Files between the specified dates have been deleted.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                textBox1.Clear();
+                textBox3.Clear();
                 textBox2.Clear();
-                textBox1.Text = string.Empty;
+                textBox3.Text = string.Empty;
                 dateTimePicker1.Value = DateTime.Now;
                 dateTimePicker2.Value = DateTime.Now;
             }
@@ -152,6 +158,28 @@ namespace WindowsForms
         }
 
         private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog folder = new FolderBrowserDialog();
+            DialogResult result = folder.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                textBox3.Text = folder.SelectedPath;
+            }
+            DirectoryInfo directoryInfo = new DirectoryInfo(textBox3.Text);
+            lstDicrectory.Add(directoryInfo);
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
         }
